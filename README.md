@@ -10,20 +10,21 @@ Diese interaktive App dient der Visualisierung und Analyse von EKG- und Leistung
 ### 📦 Installation mit PDM
 
 1. 📥 Projekt-Repository klonen:
-    1. Kopiere die https-Adresse des Codes 
-    2. Öffne den entsprechenden Ordner und kopiere den Code in die git bash 
-    3. öffne den Ordner in Visual Studio Code 
+    1. Kopiere die Https-Adresse des Repositories über den grünen Code-Button auf GitHUb
+    2. Öffne den Zielordner auf deinem Rechner, öffne dort die GitBash und gib den Befehl `git clone <Https-Link>´ ein 
+    3. Öffne den geklonten Ordner anschließend in Visual Studio Code 
 
 2. 📦 Abhängigkeiten installieren:
-    1. Gib in der powershell den Befehl `pdm install´ ein, um das erstellte pdm und alles wichtigen Pakete zu installieren 
+    1. Öffne die Powershell oder ein Terminal im Projektordner und führe den Befehl `pdm install´ aus, dadurch werden alle notwendigen Pakete automatisch installiert 
 
-Wichtig: Stelle sicher, dass PDM bereits auf dem PC installiert ist. Falls nicht:  
+    Wichtig: Stelle sicher, dass PDM bereits auf deinem System installiert ist
 
 ---
 
-## 🚀 Anwendung starten
-Dazu in der powershell den Befehl streamlit run main.py eingeben
-> Die App öffnet sich im Browser unter `http://localhost:8501`
+## 🚀 Anwendung 
+1. Anwendung starten 
+    1. Starte die App in der Powershell oder einem Terminal mit dem Befehl `streamlit run main.py´
+    2. Die App öffnet sich automatisch im Browser unter der Adresse http://localhost:8501
 
 ---
 
@@ -66,14 +67,6 @@ Dazu in der powershell den Befehl streamlit run main.py eingeben
    - Herzfrequenz-/Leistungskurven
    - farbige Zonenmarkierung im Diagramm
    - statistische Kennzahlen pro Zone
-
----
-
-## 📸 Hinweis zu den Daten
-
-- `personen.csv` enthält die Versuchspersonen (Name, Bildpfad, evtl. weitere Daten)
-- Die Messdaten müssen unter `data/activities/activity.csv` im richtigen Format vorliegen
-- Bilder liegen unter `data/pictures/` und sollten korrekt mit den Namen verknüpft sein
 
 ---
 
