@@ -76,3 +76,17 @@ Diese Anwendung richtet sich an:
 - Sportwissenschaftler:innen
 - Trainer:innen
 - Studierende in Projekten zur Leistungsdiagnostik
+
+## 🖼 Beispielbilder aus der Anwendung
+
+Hier siehst du beispielhafte Screenshots der App:
+
+### 👤 Versuchsperson-Auswahl
+![Versuchsperson](data/screenshots\Screenshot_1_Tab1.jpg)
+
+### 📊 Diagramm mit Herzfrequenzzonen
+![Herzfrequenz-Plot](data/screenshots\Screenshot_2_Tab2.jpg)
+
+
+### 📈 Statistische Auswertung
+![Statistik-Ansicht](data/screenshots\Screenshot_3_tab2_Tabellen.jpg)
