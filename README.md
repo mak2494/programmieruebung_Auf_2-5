@@ -82,11 +82,11 @@ Diese Anwendung richtet sich an:
 Hier siehst du beispielhafte Screenshots der App:
 
 ### 👤 Versuchsperson-Auswahl
-![Versuchsperson](data/screenshots\Screenshot_1_Tab1.jpg)
+![Versuchsperson](data/screenshots/Screenshot_1_Tab1.jpg)
 
 ### 📊 Diagramm mit Herzfrequenzzonen
-![Herzfrequenz-Plot](data/screenshots\Screenshot_2_Tab2.jpg)
+![Herzfrequenz-Plot](data/screenshots/Screenshot_2_Tab2.jpg)
 
 
 ### 📈 Statistische Auswertung
-![Ansicht-Statistik](data/screenshots\Screenshot_3_tab2_Tabellen.jpg)
+![Ansicht-Statistik](data/screenshots/Screenshot_3_tab2_Tabellen.jpg)
