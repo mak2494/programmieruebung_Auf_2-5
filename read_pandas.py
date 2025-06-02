@@ -122,15 +122,33 @@ def max_mean_power(df):
     
     return max_power, mean_power
 
+def get_time_in_zones(df, zones):
+    # Funktion, die die Zeit in den Zonen berechnet
+    time_in_zones = {zone: 0 for zone in zones.keys()}
+    
+    for zone, (lower, upper) in zones.items():
+        time_in_zone = df[(df['HeartRate'] >= lower) & (df['HeartRate'] < upper)].shape[0]
+        time_in_zones[zone] = time_in_zone/60  # Zeit in Minuten
+    
+    return time_in_zones
+
+def mean_power_per_zone(df):
+    mean_power_by_zone = df.groupby('HeartRateZone')['PowerOriginal'].mean().reset_index()
+    mean_power_by_zone = mean_power_by_zone.sort_values("HeartRateZone")  # für sortierte Ausgabe
+    return mean_power_by_zone
+
+
 
     
 if __name__ == "__main__":
     # Wenn das Skript direkt ausgeführt wird, wird der Plot generiert
     df = read_my_csv()
+    max_hr = int(df["HeartRate"].max())
     df, zones = heart_rate_zone(df, max_hr)  # Beispiel mit max Herzfrequenz 199
-    fig_activity = make_plot(df,zones)
-    fig_activity.show()  # Zeigt den Plot im Browser an
-    
+    #fig_activity = make_plot(df,zones)
+    #fig_activity.show()  # Zeigt den Plot im Browser an
+    time_in_zone=get_time_in_zones(df, zones)  # Berechnet die Zeit in den Zonen
+    print(time_in_zone)
    
 
    

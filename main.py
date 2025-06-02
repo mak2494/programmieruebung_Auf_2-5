@@ -2,6 +2,7 @@ import streamlit as st
 import read_data # Ergänzen Ihr eigenes Modul
 from PIL import Image
 import read_pandas
+import pandas as pd
 
 tab1, tab2 = st.tabs(["Versuchsperson", "Plot"])
 
@@ -64,6 +65,38 @@ with tab2:
         df, zones = read_pandas.heart_rate_zone(df, hf_max)
         fig_activity = read_pandas.make_plot(df, zones)
         st.plotly_chart(fig_activity, use_container_width=True)  # Zeigt den Plot in Streamlit an
+
+    zone_times=read_pandas.get_time_in_zones(df, zones)
+    zone_df=pd.DataFrame(
+        [(zone, round(time, 2)) for zone, time in zone_times.items()],
+        columns=["Zone", "Zeit in Minuten"]     
+    )
     
-    st.write("Maximale Power:", read_pandas.max_mean_power(df)[0])
-    st.write("Mittlere Power:", read_pandas.max_mean_power(df)[1])
+
+    # Durchschnittliche Leistung pro Herzfrequenzzone
+    mean_power_by_zone = read_pandas.mean_power_per_zone(df)  
+    max_power = f"{read_pandas.max_mean_power(df)[0]:.2f} Watt"
+    mean_power = f"{read_pandas.max_mean_power(df)[1]:.2f} Watt"
+    st.markdown(f"**Maximale Power:** {max_power}")
+    st.markdown(f"**Mittlere Power:** {mean_power}")
+
+    #st.write("###### Maximale Power:", f"{read_pandas.max_mean_power(df)[0]:.2f} Watt")
+    #st.write("###### Mittlere Power:", f"{read_pandas.max_mean_power(df)[1]:.2f} Watt")
+    st.write("###### Zeit pro Zone")
+    st.dataframe(
+        zone_df.set_index("Zone"),
+        column_config={
+            "Zeit in Minuten": st.column_config.NumberColumn(
+                "Zeit in Minuten", format="%.2f"
+            )
+        }
+    )
+    
+    st.write("###### Durchschnittliche Leistung pro Herzfrequenzzone")
+    st.dataframe(
+    mean_power_by_zone.set_index("HeartRateZone"),
+    column_config={
+        "PowerOriginal": st.column_config.NumberColumn(
+            "PowerOriginal", format="%.2f"
+        )
+    })
