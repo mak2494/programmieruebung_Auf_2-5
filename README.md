@@ -89,4 +89,4 @@ Hier siehst du beispielhafte Screenshots der App:
 
 
 ### 📈 Statistische Auswertung
-![Statistik-Ansicht](data/screenshots\Screenshot_3_tab2_Tabellen.jpg)
+![Ansicht-Statistik](data/screenshots\Screenshot_3_tab2_Tabellen.jpg)
