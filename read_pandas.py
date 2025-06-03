@@ -1,14 +1,12 @@
 # %%
 
-# Paket für Bearbeitung von Tabellen
+# Pakete für Ausführung
 import pandas as pd
 import numpy as np
 import plotly.io as pio
 import plotly.graph_objects as go
 pio.renderers.default = "browser"  # Plotly in Browser anzeigen
 
-
-# Paket
 ## zuvor !pip install plotly
 ## ggf. auch !pip install nbformat
 import plotly.express as px
@@ -28,7 +26,6 @@ def read_my_csv():
 
 def heart_rate_zone(df, max_hr):
     # Funktion, die die Herzfrequenzzonen berechnet
-    # Die Zonen sind in der Regel:
     zones = {
         "Zone 1": [0.50 * max_hr, 0.60 * max_hr],
         "Zone 2": [0.60 * max_hr, 0.70 * max_hr],
@@ -41,13 +38,13 @@ def heart_rate_zone(df, max_hr):
         for zone, (lower, upper) in zones.items():
             if lower <= hr < upper:
                 return zone
-    
+    # neue Spalte "HeartRateZone" zum Data frame hinzufügen
     df['HeartRateZone'] = df['HeartRate'].apply(assign_zone)
-    return df, zones
+    return df, zones 
         
 
 def make_plot(df,zones):
-    # Farben zuweisen
+    # Zonen Farben zuweisen
     zone_colors = {
         "Zone 1": "blue",
         "Zone 2": "green",
@@ -57,7 +54,7 @@ def make_plot(df,zones):
     }
     fig = go.Figure()
 
-    #Power Original hinzufügen
+    #Power Original also Plot hinzufügen
     fig.add_trace(go.Scatter(
         x=df['time'],
         y=df['PowerOriginal'],
@@ -66,12 +63,12 @@ def make_plot(df,zones):
         line=dict(color='grey', width=1.5)
     ))  
 
-    # Herzfrequenzzonen farbig hinzufügen
+    # Herzfrequenzzonen Plot farbig hinzufügen
     for zone in df['HeartRateZone'].dropna().unique():
         df_zone= df.copy()
         df_zone['HeartRateMasked'] = df_zone.apply(
             lambda row: row['HeartRate'] if row['HeartRateZone'] == zone else np.nan, axis=1
-        )
+        ) # Spalte mit Herzfrequenzwerten an zonen DF nur in der jeweiligen Zone zufügen, sonst NaN
 
         fig.add_trace(go.Scatter(
             x=df_zone['time'],
@@ -79,7 +76,7 @@ def make_plot(df,zones):
             mode='lines',
             name=f"Heart Rate {zone}",  
             line=dict(color=zone_colors.get(zone, 'gray'), width=2)
-        ))
+        )) #Plot mit Herzfrequenzwerten in der jeweiligen Zone
     
     
     for zone_name, (lower, upper) in zones.items():
@@ -88,21 +85,21 @@ def make_plot(df,zones):
             x0=df['time'].min(), x1=df['time'].max(),
             y0=lower, y1=lower,
             line=dict(color= 'gray',width=1, dash='dot'),
-        )
+        ) # Horizontale Linie für untere Grenze der Zone
 
         fig.add_shape(
             type='line',
             x0=df['time'].min(), x1=df['time'].max(),
             y0=upper, y1=upper,  
             line=dict(color='gray',width=1, dash='dot'),
-        )   
+        )   # Horizontale Linie für obere Grenze der Zone
     fig.update_layout(
         title='Heart Rate and Power Over Time',
         xaxis_title='Time (s)',
         yaxis_title='Heart Rate / Power',
         template='plotly_white'
     )
-    x_text = df['time'].max() + 5  # Etwas rechts vom Plotbereich
+    x_text = df['time'].max() + 5  # Zonen Bezeichnung etwas rechts vom Plotbereich
     for zone_name, (lower, upper) in zones.items():
         y_middle = (lower + upper) / 2  # Vertikale Mitte der Zone
         fig.add_annotation(
@@ -132,11 +129,11 @@ def get_time_in_zones(df, zones):
     
     return time_in_zones
 
+#Funktion, die die mittlere Leistung pro Herzfrequenzzone berechnet
 def mean_power_per_zone(df):
     mean_power_by_zone = df.groupby('HeartRateZone')['PowerOriginal'].mean().reset_index()
     mean_power_by_zone = mean_power_by_zone.sort_values("HeartRateZone")  # für sortierte Ausgabe
     return mean_power_by_zone
-
 
 
     
