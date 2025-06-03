@@ -90,3 +90,25 @@ Hier siehst du beispielhafte Screenshots der App:
 
 ### 📈 Statistische Auswertung
 ![Ansicht-Statistik](data/screenshots/Screenshot_3_tab2_Tabellen.jpg)
+
+# ⚡ Power_Curve: Leistungsanalyse über Zeitfenster
+
+## ⚠️ Zusätzliche Voraussetzungen
+
+Für das Speichern des Plots als Bild (z. B. PNG) wird das Paket `kaleido` benötigt.
+
+## 🔧 Funktionen
+
+- **Einlesen der Leistungsdaten** aus einer CSV-Datei
+- **Analyse der maximalen durchschnittlichen Leistung** für definierte Zeitfenster (z. B. 10 s, 1 min, 5 min, …)
+- **Erstellung eines neuen DataFrames**, das die Ergebnisse übersichtlich enthält
+- **Visualisierung als Plot** mit Plotly
+- **Speicherung des Plots als `.png`** im Ordner `data/`
+
+## 📊 Ausgabe
+
+- Tabelle mit Fensterlänge (in Sekunden) und maximaler Durchschnittsleistung
+- Plot der Leistungskurve als `leistungskurve.png` im Projektverzeichnis (oder Unterordner `data/`)
+
+## Beispielbild aus der Anwendung 
+![PowerCurve](data/power_curve.png)
