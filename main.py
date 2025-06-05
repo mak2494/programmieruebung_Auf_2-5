@@ -1,17 +1,17 @@
 import streamlit as st 
-import read_data # Ergänzen Ihr eigenes Modul
+from person import Person # Ergänzen Ihr eigenes Modul
 from PIL import Image
 import read_pandas
 import pandas as pd
 
-tab1, tab2 = st.tabs(["Versuchsperson", "Plot"])
+tab1, tab2, tab3 = st.tabs(["Versuchsperson", "EKG-Analyse", "Plot"])
 
 with tab1:
     st.write("# EKG APP")   
     st.write("## Versuchsperson auswählen")
 
-    person_dict = read_data.load_person_data()
-    person_data = read_data.get_person_list()
+    person_dict = Person.load_person_data()
+    person_data = Person.get_person_list(person_dict)
 
 # Session State wird leer angelegt, solange er noch nicht existiert
     if 'current_user' not in st.session_state:
@@ -28,19 +28,40 @@ with tab1:
 
 # Suche den Pfad zum Bild, aber nur wenn der Name bekannt ist
     if st.session_state.current_user in person_data:
-        st.session_state.picture_path = read_data.find_person_data_by_name(st.session_state.current_user)["picture_path"]
+        st.session_state.picture_path = Person.find_person_data_by_name(st.session_state.current_user)["picture_path"]
 
 # Öffne das Bild und Zeige es an
     image = Image.open(st.session_state.picture_path)
     st.image(image, caption=st.session_state.current_user)
 
-
 with tab2:
+    st.write("# EKG APP")
+    st.write("## Persönliche Angaben")
+
+    if st.session_state.current_user != 'None':
+        # Person laden
+        person_dict = Person.find_person_data_by_name(st.session_state.current_user)
+        person_obj = Person(person_dict)
+
+        # Daten extrahieren
+        alter = person_obj.calculate_age()
+        hfmax = person_obj.calculate_max_heart_rate()
+        person_id = person_obj.id
+
+        # Ausgabe
+        st.markdown(f"**Versuchsperson:** {person_obj.firstname} {person_obj.lastname}")
+        st.markdown(f"- 🆔 **ID:** {person_id}")
+        st.markdown(f"- 📅 **Alter:** {alter} Jahre")
+        st.markdown(f"- ❤️ **Geschätzte HFmax:** {hfmax} bpm")
+    else:
+        st.warning("Bitte zuerst eine Versuchsperson auswählen.")
+
+with tab3:
     st.write("# EKG APP")   
     st.write("## Plot")
 
-    person_dict = read_data.load_person_data()
-    person_data = read_data.get_person_list()
+    person_dict = Person.load_person_data()
+    person_data = Person.get_person_list(person_dict)
 
     # Wenn der Benutzername nicht gesetzt ist, dann kann auch kein Plot angezeigt werden
     if st.session_state.current_user == 'None':
