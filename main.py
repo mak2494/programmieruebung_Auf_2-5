@@ -80,8 +80,6 @@ with tab2:
     hr = ekg.estimate_hr()
     st.markdown(f"**Geschätzte Herzfrequenz:** {hr:.2f} bpm")
 
-# 8) Debug: Wie viele Traces enthält die Figure?
-    st.text(f"DEBUG: Anzahl Linien im Plot: {len(fig.data)}")
 
 with tab3:
     st.write("# EKG APP")   
