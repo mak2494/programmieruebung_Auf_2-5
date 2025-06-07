@@ -1,10 +1,11 @@
 import streamlit as st 
 from person import Person # Ergänzen Ihr eigenes Modul
+from ekgdata import EKGdata # Ergänzen Ihr eigenes Modul
 from PIL import Image
 import read_pandas
 import pandas as pd
 
-tab1, tab2, tab3 = st.tabs(["Versuchsperson", "EKG-Analyse", "Plot"])
+tab1, tab2, tab3 = st.tabs([" 👤 Versuchsperson", "📊 EKG-Analyse", "📈 Plot"])
 
 with tab1:
     st.write("# EKG APP")   
@@ -35,26 +36,52 @@ with tab1:
     st.image(image, caption=st.session_state.current_user)
 
 with tab2:
-    st.write("# EKG APP")
-    st.write("## Persönliche Angaben")
+    st.write("# EKG APP")   
+    st.write("## Persönliche Angaben und EKG-Plot")
 
     if st.session_state.current_user != 'None':
-        # Person laden
+        # 1) Person laden
         person_dict = Person.find_person_data_by_name(st.session_state.current_user)
-        person_obj = Person(person_dict)
+        person_obj  = Person(person_dict)
 
-        # Daten extrahieren
-        alter = person_obj.calculate_age()
-        hfmax = person_obj.calculate_max_heart_rate()
-        person_id = person_obj.id
-
-        # Ausgabe
+        # 2) Persönliche Daten ausgeben
         st.markdown(f"**Versuchsperson:** {person_obj.firstname} {person_obj.lastname}")
-        st.markdown(f"- 🆔 **ID:** {person_id}")
-        st.markdown(f"- 📅 **Alter:** {alter} Jahre")
-        st.markdown(f"- ❤️ **Geschätzte HFmax:** {hfmax} bpm")
-    else:
-        st.warning("Bitte zuerst eine Versuchsperson auswählen.")
+        st.markdown(f"- 🆔 **ID:** {person_obj.id}")
+        st.markdown(f"- 📅 **Alter:** {person_obj.calculate_age()} Jahre")
+        st.markdown(f"- ❤️ **Geschätzte HFmax:** {person_obj.calculate_max_heart_rate():.0f} bpm")
+
+ # 3) EKG-Tests aus DB ziehen
+    ekg_tests = person_dict.get("ekg_tests", [])
+    if not ekg_tests:
+        st.warning("Keine EKG-Daten für diese Person gefunden.")
+        st.stop()
+
+# 3.1) Auswahlbox mit Beschriftung
+    labels = [f"{t['date']} (Test {i+1})" for i, t in enumerate(ekg_tests)]
+    idx = st.selectbox(
+    "Welchen EKG-Test anzeigen?",
+    options=list(range(len(ekg_tests))),
+    format_func=lambda i: labels[i]
+    )
+
+# 3.2) EKG-Daten für Auswahl extrahieren
+    selected_test = ekg_tests[idx]
+
+# 4) Neue Instanz – garantiert frische Daten
+    ekg = EKGdata(selected_test)
+
+# 5) Neue Figure (immer neu erzeugt)
+    fig = ekg.plot_time_series()
+
+# 6) Diagramm anzeigen – mit key (erzwingt Re-Render in Streamlit)
+    st.plotly_chart(fig, use_container_width=True, key=f"ekg_plot_{idx}")
+
+# 7) Herzfrequenz berechnen und anzeigen
+    hr = ekg.estimate_hr()
+    st.markdown(f"**Geschätzte Herzfrequenz:** {hr:.2f} bpm")
+
+# 8) Debug: Wie viele Traces enthält die Figure?
+    st.text(f"DEBUG: Anzahl Linien im Plot: {len(fig.data)}")
 
 with tab3:
     st.write("# EKG APP")   

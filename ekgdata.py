@@ -65,14 +65,14 @@ class EKGdata:
         return None
 
 
-    def find_peaks(self, threshold=None, window_size=3):
+    def find_peaks(self, threshold=None, window_size=5):
         series = self.df["Messwerte in mV"]
     
         # Glätten mit moderner Methode
         smooth = series.rolling(window=window_size*2+1, center=True).mean().bfill().ffill()
 
         if threshold is None:
-            threshold = smooth.quantile(0.95)
+            threshold = smooth.quantile(0.95)  
 
         peaks = []
 
@@ -80,9 +80,13 @@ class EKGdata:
             window = smooth.iloc[i - window_size:i + window_size + 1]
             center_value = smooth.iloc[i]
 
-            if center_value == window.max() and center_value > threshold:
+            if center_value >= window.max() and center_value > threshold:
                 if len(peaks) == 0 or i - peaks[-1] > window_size:
-                    peaks.append(i)
+            # === Neuer Code-Block ===
+                    raw_window = self.df["Messwerte in mV"].iloc[i - window_size : i + window_size + 1]
+                    true_peak = raw_window.idxmax()
+                    peaks.append(true_peak)
+            
 
         return peaks
 
